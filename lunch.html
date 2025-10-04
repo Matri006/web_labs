@@ -124,6 +124,70 @@
     </div>
   </section>
 </main>
+<form id="form" method="POST" action="https://httpbin.org/post">
+  <div class ="order-form">
+    <h2>Ваш заказ</h2>
+    <label for="soup">Суп</label>
+    <select id="soup" name="soup" required>
+      <option value="cream-soup">Крем-суп из тыквы</option>
+      <option value="bylion">Куриный бульон с вермишелью</option>
+      <option value="soup-pure">Грибной суп-пюре</option>
+    </select>
+
+    <label for="main-dish">Главное блюдо</label>
+    <select id="main-dish" name="main-dish" required>
+      <option value="chicken">Курица терияки с рисом</option>
+      <option value="grill">Лосось на грилле с овощами</option>
+      <option value="vegitables">Овощное рагу с нутом</option>
+    </select>
+
+    <label for="drinks">Напиток</label>
+    <select id="drink" name="drink" required>
+      <option value="green-tea">Зелёный чай</option>
+      <option value="limonade">Домашний лимонад</option>
+      <option value="espresso">Эспрессо</option>
+    </select>
+
+    <label for="comment">Комментарий к заказу</label>
+    <textarea id="comment" name="comment" rows="3"></textarea>
+  </div>
+  <div class = "data-form">
+    <h2>Ваши данные</h2>
+    <label for="name">Имя</label>
+    <input type="text" id="name" name = "name" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name = "email" required>
+
+    <label for="phone">Номер телефона</label>
+    <input type="tel" id="phone" name = "phone" required>
+
+    <label for="address">Адрес доствки</label>
+    <input type="text" id="address" name = "address" required>
+    <p><em>Доствка осуществляется только по Москв</em></p>
+
+  <legend><strong>Время доставки:</strong></legend>
+
+  <label class="radio-label">
+        <input type="radio" name="delivery_time_option" value="asap" required>
+        Как можно скорее
+      </label>
+
+      <label class="radio-label">
+        <input type="radio" name="delivery_time_option" value="specified" required>
+        К указанному времени
+      </label>
+
+
+    
+  <label for="time"><strong>Укажите время доставки</strong></label>
+  <input type="time" id="time" name="time" min="07:00" max="23:00">
+  <p><em>Доступное время доставки с 7:00 до 23:00</em></p>
+
+    <button type="reset">Сбросить</button>
+    <button type="submit">Оформить</button>
+    </div>
+  </form>
 
 <footer id = "contacts">
     <p>Позвонить нам: <a href="tel:+70000000000">+7-000-000-00-00</a></p>
