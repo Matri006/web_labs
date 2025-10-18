@@ -1,7 +1,9 @@
 let selectedDishes = {
     soup: null,
     main: null,
-    drink: null
+    drink: null,
+    salad: null, 
+    dessert: null
 };
 function addToOrder(dishData) {
     dishesData[dishData.id] = dishData;
@@ -51,6 +53,32 @@ function updateOrderDisplay() {
     } else {
         drinkElement.textContent = 'Напиток не выбран';
         drinkHidden.value = 'none';
+    }
+    const saladElement = document.getElementById('salad'); 
+    const saladHidden = document.getElementById('BuySalad');
+    if (selectedDishes.salad && dishesData[selectedDishes.salad]) {
+        const saladData = dishesData[selectedDishes.salad];
+        const price = parseInt(saladData.price.replace('₽', '').trim());
+        saladElement.textContent = `${saladData.title} ${saladData.price}`;
+        saladHidden.value = `${saladData.title} ${saladData.price}`;
+        total += price;
+        hasSelection = true;
+    } else {
+        saladElement.textContent = 'Салат не выбран';
+        saladHidden.value = 'none';
+    }
+    const dessertElement = document.getElementById('dessert'); 
+    const dessertHidden = document.getElementById('BuyDessert'); 
+    if (selectedDishes.dessert && dishesData[selectedDishes.dessert]) {
+        const dessertData = dishesData[selectedDishes.dessert];
+        const price = parseInt(dessertData.price.replace('₽', '').trim());
+        dessertElement.textContent = `${dessertData.title} ${dessertData.price}`;
+        dessertHidden.value = `${dessertData.title} ${dessertData.price}`;
+        total += price;
+        hasSelection = true;
+    } else {
+        dessertElement.textContent = 'Десерт не выбран';
+        dessertHidden.value = 'none';
     }
     const nanElement = document.getElementById('nan');
     nanElement.textContent = hasSelection ? '' : 'Ничего не выбрано';
@@ -116,6 +144,8 @@ function getDishCategory(dishCard) {
     if (section.id === 'soups') return 'soup';
     if (section.id === 'mains') return 'main';
     if (section.id === 'drinks') return 'drink';
+    if(section.id === 'salad-order') return 'salad';
+    if(section.id === 'dessert-order') return 'dessert';
     
     return 'unknown';
 }
@@ -123,13 +153,16 @@ function resetOrder() {
     selectedDishes = {
         soup: null,
         main: null,
-        drink: null
+        drink: null,
+        salad: null,
+        dessert: null
     };
     dishesData = {};
     updateOrderDisplay();
 }
 function validateForm() {
-    if (!selectedDishes.soup && !selectedDishes.main && !selectedDishes.drink) {
+    if (!selectedDishes.soup && !selectedDishes.main && !selectedDishes.drink && 
+        !selectedDishes.salad && !selectedDishes.dessert) { 
         alert('Пожалуйста, выберите хотя бы одно блюдо перед оформлением заказа');
         return false;
     }

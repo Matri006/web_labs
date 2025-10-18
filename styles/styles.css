@@ -343,6 +343,34 @@ gap: 100px;
   font-weight: normal;
 }
 
+
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.filter-btn:hover {
+    border-color: #4CAF50;
+}
+
 @media (max-width: 600px) {
     .dishes-grid {
         grid-template-columns: 1fr;

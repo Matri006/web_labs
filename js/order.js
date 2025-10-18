@@ -1,6 +1,46 @@
+function initializeFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const section = this.closest('.dishes-section');
+            const filterValue = this.getAttribute('data-filter');
+            if (this.classList.contains('active')) {
+                if (filterValue === 'all') return; 
+                const allButton = section.querySelector('.filter-btn[data-filter="all"]');
+                allButton.classList.add('active');
+                this.classList.remove('active');
+                filterDishes(section, 'all');
+            } else {
+                section.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                filterDishes(section, filterValue);
+            }
+        });
+    });
+}
+
+function filterDishes(section, filter) {
+    const dishes = section.querySelectorAll('.dish');
+    
+    dishes.forEach(dish => {
+        const dishKind = dish.getAttribute('data-kind') || 'all';
+        
+        if (filter === 'all' || dishKind === filter) {
+            dish.style.display = 'block';
+        } else {
+            dish.style.display = 'none';
+        }
+    });
+}
+
+
 function createDishCard(dish) {
     const dishElement = document.createElement('div');
     dishElement.className = 'dish';
+    dishElement.setAttribute('data-kind', dish.kind || 'all'); 
     dishElement.innerHTML = `
         <img src="${dish.image}" alt="${dish.name}">
         <div class="dish-body">
@@ -21,7 +61,6 @@ function loadDishes() {
     }
 
     if (typeof dishesData === 'object' && !Array.isArray(dishesData)) {
-
         console.log('Объект с категориями:', Object.keys(dishesData));
 
         const soupsGrid = document.querySelector('#soups .dishes-grid');
@@ -44,6 +83,21 @@ function loadDishes() {
             console.log('Напитки:', dishesData.drinks);
             dishesData.drinks.forEach(drink => {
                 drinksGrid.appendChild(createDishCard(drink));
+            });
+        }
+     
+        const saladGrid = document.querySelector('#salad-order .dishes-grid');
+        if (saladGrid && dishesData.salad) {
+            console.log('Салаты:', dishesData.salad);
+            dishesData.salad.forEach(salad => {
+                saladGrid.appendChild(createDishCard(salad));
+            });
+        }
+        const dessertGrid = document.querySelector('#dessert-order .dishes-grid');
+        if (dessertGrid && dishesData.dessert) {
+            console.log('Десерты:', dishesData.dessert);
+            dishesData.dessert.forEach(dessert => {
+                dessertGrid.appendChild(createDishCard(dessert));
             });
         }
     } else if (Array.isArray(dishesData)) {
@@ -72,6 +126,24 @@ function loadDishes() {
                 drinksGrid.appendChild(createDishCard(drink));
             });
         }
+    
+        const saladGrid = document.querySelector('#salad-order .dishes-grid');
+        if (saladGrid) {
+            const salads = dishesData.filter(dish => dish.category === 'salad');
+            console.log('Салаты:', salads);
+            salads.forEach(salad => {
+                saladGrid.appendChild(createDishCard(salad));
+            });
+        }
+
+        const dessertGrid = document.querySelector('#dessert-order .dishes-grid');
+        if (dessertGrid) {
+            const desserts = dishesData.filter(dish => dish.category === 'dessert');
+            console.log('Десерты:', desserts);
+            desserts.forEach(dessert => {
+                dessertGrid.appendChild(createDishCard(dessert));
+            });
+        }
     } else {
         console.error('Неизвестная структура данных dishesData:', dishesData);
     }
@@ -90,6 +162,7 @@ function addEventListeners() {
         });
     });
 }
+
 function addToLunch(dishKeyword) {
     let dish;
     
@@ -99,7 +172,9 @@ function addToLunch(dishKeyword) {
         const allDishes = [
             ...(dishesData.soups || []), 
             ...(dishesData.main || []),
-            ...(dishesData.drinks || [])
+            ...(dishesData.drinks || []),
+            ...(dishesData.salad || []),   
+            ...(dishesData.dessert || [])
         ];
         dish = allDishes.find(item => item.keyword === dishKeyword);
     }
@@ -118,6 +193,7 @@ function addToLunch(dishKeyword) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    initializeFilters();
     console.log('DOM загружен');
     loadDishes();
 });
