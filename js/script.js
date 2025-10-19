@@ -10,7 +10,6 @@ function addToOrder(dishData) {
     selectedDishes[dishData.category] = dishData.id;
     updateOrderDisplay();
     updateFormFields();
-    showNotification(`Добавлено: ${dishData.title}`);
 }
 function updateOrderDisplay() {
     let total = 0;
@@ -89,35 +88,7 @@ function updateOrderDisplay() {
 }
 function updateFormFields() {
 }
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 5px;
-        z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        animation: slideIn 0.3s ease-out;
-    `;
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-    document.body.appendChild(notification);
-    setTimeout(() => {
-        notification.remove();
-        style.remove();
-    }, 3000);
-}
+
 function initializeAddToCartButtons() {
     const addButtons = document.querySelectorAll('.add-btn');
     addButtons.forEach(button => {
@@ -160,6 +131,10 @@ function resetOrder() {
     dishesData = {};
     updateOrderDisplay();
 }
+
+
+
+
 function validateForm() {
     if (!selectedDishes.soup && !selectedDishes.main && !selectedDishes.drink && 
         !selectedDishes.salad && !selectedDishes.dessert) { 
@@ -188,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resetButton.addEventListener('click', function() {
             setTimeout(() => {
                 resetOrder();
-                showNotification('Заказ сброшен');
             }, 0);
         });
     }
