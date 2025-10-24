@@ -1,6 +1,6 @@
 let selectedDishes = {
     soup: null,
-    main: null,
+    "main-course": null,
     drink: null,
     salad: null, 
     dessert: null
@@ -29,8 +29,8 @@ function updateOrderDisplay() {
     }
     const mainElement = document.getElementById('bludo');
     const mainHidden = document.getElementById('BuyMain');
-    if (selectedDishes.main && dishesData[selectedDishes.main]) {
-        const mainData = dishesData[selectedDishes.main];
+    if (selectedDishes["main-course"] && dishesData[selectedDishes["main-course"]]) {
+        const mainData = dishesData[selectedDishes["main-course"]];
         const price = parseInt(mainData.price.replace('₽', '').trim());
         mainElement.textContent = `${mainData.title} ${mainData.price}`;
         mainHidden.value = `${mainData.title} ${mainData.price}`;
@@ -113,7 +113,7 @@ function getDishCategory(dishCard) {
     const section = dishCard.closest('section');
     
     if (section.id === 'soups') return 'soup';
-    if (section.id === 'mains') return 'main';
+    if (section.id === 'mains') return 'main-course';
     if (section.id === 'drinks') return 'drink';
     if(section.id === 'salad-order') return 'salad';
     if(section.id === 'dessert-order') return 'dessert';
@@ -123,7 +123,7 @@ function getDishCategory(dishCard) {
 function resetOrder() {
     selectedDishes = {
         soup: null,
-        main: null,
+        "main-course": null,
         drink: null,
         salad: null,
         dessert: null
@@ -136,11 +136,12 @@ function resetOrder() {
 
 
 function validateForm() {
-    if (!selectedDishes.soup && !selectedDishes.main && !selectedDishes.drink && 
-        !selectedDishes.salad && !selectedDishes.dessert) { 
-        alert('Пожалуйста, выберите хотя бы одно блюдо перед оформлением заказа');
-        return false;
-    }
+    if (!selectedDishes.soup && !selectedDishes["main-course"] && !selectedDishes.drink && 
+    !selectedDishes.salad && !selectedDishes.dessert) { 
+    alert('Пожалуйста, выберите хотя бы одно блюдо перед оформлением заказа');
+    return false;
+}
+
     const deliveryTimeOption = document.querySelector('input[name="delivery_time_option"]:checked');
     if (!deliveryTimeOption) {
         alert('Пожалуйста, выберите время доставки');
@@ -156,8 +157,71 @@ function validateForm() {
     
     return true;
 }
-document.addEventListener('DOMContentLoaded', function() {
-    initializeAddToCartButtons();
+let dishesData = {};
+async function loadDishes() {
+    try {
+        const response = await fetch("https://edu.std-900.ist.mospolytech.ru/labs/api/dishes");
+        if (!response.ok) {
+            throw new Error("Ошибка при загрузке данных с сервера");
+        }
+
+        const dishes = await response.json();
+        const sections = {
+            soup: document.querySelector("#soups .dishes-grid"),
+            "main-course" : document.querySelector("#mains .dishes-grid"),
+            drink: document.querySelector("#drinks .dishes-grid"),
+            salad: document.querySelector("#salad-order .dishes-grid"),
+            dessert: document.querySelector("#dessert-order .dishes-grid")
+        };
+        Object.values(sections).forEach(section => {
+            if (section) section.innerHTML = "";
+        });
+        dishes.forEach(dish => {
+            const category = dish.category;
+            const section = sections[category];
+            if (!section) {
+                console.warn(`Неизвестная категория: ${category}`);
+                return;
+            }
+
+            const dishCard = document.createElement("div");
+            dishCard.classList.add("dish");
+            dishCard.dataset.category = category;
+            dishCard.dataset.kind = dish.kind;
+            dishCard.innerHTML = `
+                <img src="${dish.image}?v=${Date.now()}" alt="${dish.name}" class="dish-img">
+                <h3 class="dish-title">${dish.name}</h3>
+                <p class="dish-weight">${dish.count}</p>
+                <p class="dish-price">${dish.price} ₽</p>
+                <button class="add-btn">Добавить</button>
+            `;
+
+            const id = dish.keyword || dish.name.toLowerCase().replace(/\s+/g, '-');
+            dishesData[id] = {
+                id,
+                title: dish.name,
+                price: `${dish.price} ₽`,
+                weight: dish.count,
+                category
+            };
+
+            section.appendChild(dishCard);
+
+            dishCard.querySelector(".add-btn").addEventListener("click", () => {
+                addToOrder(dishesData[id]);
+            });
+        });
+
+        console.log("Блюда успешно загружены:", dishes);
+    } catch (error) {
+        console.error("Ошибка загрузки блюд:", error);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadDishes()
+    //initializeAddToCartButtons();
     const resetButton = document.querySelector('button[type="reset"]');
     if (resetButton) {
         resetButton.addEventListener('click', function() {
@@ -174,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         console.log('Данные заказа:', {
             soup: document.getElementById('BuySoup').value,
-            main: document.getElementById('BuyMain').value,
+            "main-course": document.getElementById('BuyMain').value,
             drink: document.getElementById('BuyDrink').value,
             total: document.getElementById('BuyCost').value,
             name: document.getElementById('name').value,

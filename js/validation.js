@@ -27,12 +27,13 @@ function validateOrder() {
 
 function getSelectedDishes() {
     const selected = {
-        soup: document.getElementById('BuySoup').value !== 'none',
-        main: document.getElementById('BuyMain').value !== 'none',
-        salad: document.getElementById('BuySalad').value !== 'none',
-        drink: document.getElementById('BuyDrink').value !== 'none',
-        dessert: document.getElementById('BuyDessert').value !== 'none'
-    };
+    soup: document.getElementById('BuySoup').value !== 'none',
+    "main-course": document.getElementById('BuyMain').value !== 'none',
+    salad: document.getElementById('BuySalad').value !== 'none',
+    drink: document.getElementById('BuyDrink').value !== 'none',
+    dessert: document.getElementById('BuyDessert').value !== 'none'
+};
+
     
     return selected;
 }
@@ -56,7 +57,7 @@ function checkCombo(selected) {
     ];
     return validCombos.some(combo => 
         combo.soup === selected.soup &&
-        combo.main === selected.main &&
+        combo["main-course"] === selected.main &&
         combo.salad === selected.salad &&
         combo.drink === selected.drink
     );
