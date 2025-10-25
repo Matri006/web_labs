@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Оформление заказа - Food Construct</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Food Construct</h1>
+    <nav> 
+	  <a href="index.html">Главная</a>
+      <a href="lunch.html">Собрать ланч</a>
+      <a href="checkout.html">Оформить заказ</a>
+      <a href="orders.html">Мои заказы</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Оформление заказа</h1>
+    
+    <div class="checkout-container">
+      <section class="order-summary-section">
+        <h2>Состав заказа</h2>
+        <div id="order-items" class="order-items">
+        </div>
+        <div id="empty-order" class="empty-order" style="display: none;">
+          <p>Ничего не выбрано. Чтобы добавить блюда в заказ, перейдите на страницу <a href="lunch.html">Собрать ланч</a>.</p>
+        </div>
+        <div class="order-total">
+          <strong>Итого: <span id="total-price">0</span> ₽</strong>
+        </div>
+      </section>
+      <section class="checkout-form-section">
+        <h2>Оформление заказа</h2>
+        <form id="checkout-form">
+          <div class="form-group">
+            <label for="full_name">ФИО *</label>
+            <input type="text" id="full_name" name="full_name" required placeholder="Введите ваше полное имя">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required placeholder="example@mail.ru">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Телефон *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="+7 (XXX) XXX-XX-XX">
+          </div>
+
+          <div class="form-group">
+            <label for="delivery_address">Адрес доставки *</label>
+            <input type="text" id="delivery_address" name="delivery_address" required placeholder="Улица, дом, квартира">
+          </div>
+
+          <div class="form-group">
+            <label>Тип доставки *</label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="delivery_type" value="now" required checked>
+                Как можно скорее
+              </label>
+              <label>
+                <input type="radio" name="delivery_type" value="by_time" required>
+                К указанному времени
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" id="delivery-time-group" style="display: none;">
+            <label for="delivery_time">Время доставки *</label>
+            <input type="time" id="delivery_time" name="delivery_time" min="07:00" max="23:00" step="300">
+            <small>Доступное время доставки: с 7:00 до 23:00</small>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="subscribe" value="1">
+              Подписаться на рассылку
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="comment">Комментарий к заказу</label>
+            <textarea id="comment" name="comment" rows="4" placeholder="Ваши пожелания к заказу..."></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-order-btn">Отправить заказ</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer id="contacts">
+    <p>Позвонить нам: <a href="tel:+70000000000">+7-000-000-00-00</a></p>
+    <p>© 2025 Food Construct</p>
+  </footer>
+
+  <script src="./js/checkout.js"></script>
+</body>
+</html>

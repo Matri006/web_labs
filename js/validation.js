@@ -1,20 +1,23 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form');
     
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const isValid = validateOrder();
-        
-        if (isValid) {
-            form.submit();
-        }
-    });
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const isValid = validateOrder();
+            
+            if (isValid) {
+                form.submit();
+            }
+        });
+    }
 });
 
 function validateOrder() {
     const selectedDishes = getSelectedDishes();
-    
     const isValidCombo = checkCombo(selectedDishes);
     
     if (!isValidCombo) {
@@ -27,13 +30,12 @@ function validateOrder() {
 
 function getSelectedDishes() {
     const selected = {
-    soup: document.getElementById('BuySoup').value !== 'none',
-    "main-course": document.getElementById('BuyMain').value !== 'none',
-    salad: document.getElementById('BuySalad').value !== 'none',
-    drink: document.getElementById('BuyDrink').value !== 'none',
-    dessert: document.getElementById('BuyDessert').value !== 'none'
-};
-
+        soup: document.getElementById('BuySoup')?.value !== 'none',
+        "main-course": document.getElementById('BuyMain')?.value !== 'none',
+        salad: document.getElementById('BuySalad')?.value !== 'none',
+        drink: document.getElementById('BuyDrink')?.value !== 'none',
+        dessert: document.getElementById('BuyDessert')?.value !== 'none'
+    };
     
     return selected;
 }
@@ -42,22 +44,19 @@ function checkCombo(selected) {
     const validCombos = [
         { soup: true, main: true, salad: true, drink: true, dessert: false },
         { soup: true, main: true, salad: true, drink: true, dessert: true },
-        
         { soup: true, main: true, salad: false, drink: true, dessert: false },
         { soup: true, main: true, salad: false, drink: true, dessert: true },
-        
         { soup: true, main: false, salad: true, drink: true, dessert: false },
         { soup: true, main: false, salad: true, drink: true, dessert: true },
-
         { soup: false, main: true, salad: true, drink: true, dessert: false },
         { soup: false, main: true, salad: true, drink: true, dessert: true },
-        
         { soup: false, main: true, salad: false, drink: true, dessert: false },
         { soup: false, main: true, salad: false, drink: true, dessert: true }
     ];
+    
     return validCombos.some(combo => 
         combo.soup === selected.soup &&
-        combo["main-course"] === selected.main &&
+        combo.main === selected["main-course"] &&
         combo.salad === selected.salad &&
         combo.drink === selected.drink
     );
@@ -66,7 +65,6 @@ function checkCombo(selected) {
 function showNotification(selectedDishes) {
     const notificationType = getNotificationType(selectedDishes);
     
-	
     const overlay = document.createElement('div');
     overlay.className = 'notification-overlay';
     
@@ -87,7 +85,7 @@ function showNotification(selectedDishes) {
             break;
             
         case 'main_salad':
-            title = 'Выберите главное блюдо/салат/стартер';
+            title = 'Выберите главное блюдо/салат';
             message = 'К супу нужно добавить главное блюдо или салат';
             break;
             
@@ -120,7 +118,6 @@ function showNotification(selectedDishes) {
         document.body.removeChild(overlay);
     });
     
-
     overlay.addEventListener('click', function(e) {
         if (e.target === overlay) {
             document.body.removeChild(overlay);
@@ -130,13 +127,15 @@ function showNotification(selectedDishes) {
 
 function getNotificationType(selected) {
     const hasSoup = selected.soup;
-    const hasMain = selected.main;
+    const hasMain = selected["main-course"];
     const hasSalad = selected.salad;
     const hasDrink = selected.drink;
     const hasDessert = selected.dessert;
+    
     if (!hasSoup && !hasMain && !hasSalad && !hasDrink && !hasDessert) {
         return 'nothing';
     }
+    
     if ((hasSoup && hasMain && hasSalad && !hasDrink) ||
         (hasSoup && hasMain && !hasSalad && !hasDrink) ||
         (hasSoup && !hasMain && hasSalad && !hasDrink) ||
@@ -144,14 +143,18 @@ function getNotificationType(selected) {
         (!hasSoup && hasMain && !hasSalad && !hasDrink)) {
         return 'drink';
     }
+    
     if (hasSoup && !hasMain && !hasSalad) {
         return 'main_salad';
     }
+    
     if (hasSalad && !hasSoup && !hasMain) {
         return 'soup_main';
     }
+    
     if ((hasDrink || hasDessert) && !hasMain && !hasSoup) {
         return 'main';
     }
+    
     return 'default';
 }
